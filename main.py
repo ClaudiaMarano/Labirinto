@@ -6,23 +6,4 @@ il punto di arrivo o, in alternativa, se non esiste alcun percorso possibile.
 
 """
 
-def get_partenza():
-    """
-    
-
-    Returns
-    -------
-    None.
-
-    """
-    
-def get_arrivo():
-    """
-    
-
-    Returns
-    -------
-    None.
-
-    """
 
