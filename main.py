@@ -6,4 +6,13 @@ il punto di arrivo o, in alternativa, se non esiste alcun percorso possibile.
 
 """
 
+from input_class import input_class
 
+path = ("indata/20-10_marked.json")
+input_class.gestisci_input(path)
+
+    
+    
+    
+    
+    

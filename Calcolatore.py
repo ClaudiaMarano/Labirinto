@@ -73,5 +73,14 @@ class Calcolatore:
         None.
 
         """
-    
+    def leggi_json(path):
+        """
+        
+        Returns
+        -------
+        None.
+
+        """
+    with open (path, 'r') as f:
+        data=json.load(f)
 
