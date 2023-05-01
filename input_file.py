@@ -23,7 +23,7 @@ class input_file:
         self.filepath = filepath
         
     
-    def leggi_json(self):
+    def leggi_file(self):
         """
         Legge un file in formato Json
 
@@ -43,7 +43,27 @@ class input_file:
             print(" Il formato del file non è supportato")
         
     
-    
+    def get_partenza():
+        """
+        
+
+        Returns
+        -------
+        None.
+
+        """
+        return
+        
+    def get_arrivo():
+        """
+        
+
+        Returns
+        -------
+        None.
+
+        """
+        return
     
     
 
