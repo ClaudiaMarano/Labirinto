@@ -33,8 +33,8 @@ class input_file:
 
         """
         nome,estensioneFile = os.path.splitext(self.filepath)
-        if estensioneFile == '.json' :
-            with open(self.filepath, 'r') as file:
+        if estensioneFile == '.json':
+            with open(self.filepath) as file:
                 dictionary = json.load(file)
             return dictionary
         else:
