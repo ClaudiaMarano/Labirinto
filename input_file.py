@@ -37,8 +37,10 @@ class input_file:
             with open(self.filepath) as file:
                 dictionary = json.load(file)
             return dictionary
+        elif estensioneFile == '.tiff':
+            print("funzione ancora da implementare")
         else:
-            return(" Il file non è in formato json")
+            print(" Il formato del file non è supportato")
         
     
     
