@@ -6,10 +6,17 @@ il punto di arrivo o, in alternativa, se non esiste alcun percorso possibile.
 
 """
 
-from input_class import input_class
+from input_file import input_file
 
-path = ("indata/20-10_marked.json")
-input_class.gestisci_input(path)
+filepath = input('Inserisci il path del file da leggere: ')
+
+#creo un'istanza della classe
+inputfile = input_file(filepath)
+dict = inputfile.leggi_json()
+    
+    
+
+
 
     
     
