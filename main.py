@@ -12,8 +12,12 @@ from input_file import input_file
 filepath = input('Inserisci il path del file da leggere:  ')
 
 #creo un'istanza della classe
-inputfile = input_file(filepath)
+inputfile = input_file('./indata/'+filepath)
 dict = inputfile.leggi_file()
+print(dict)
+# Stampa la forma della matrice
+print(dict.shape)
+
     
     
 
