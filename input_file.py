@@ -4,7 +4,8 @@
 
 import os
 import json
-
+from PIL import Image
+import numpy as np
 
 class input_file:
    
@@ -38,10 +39,21 @@ class input_file:
                 dictionary = json.load(file)
             return dictionary
         elif estensioneFile == '.tiff':
-            print("funzione ancora da implementare")
+            return input_file.leggi_file_tiff(self)
+            
+
+            #print("funzione ancora da implementare")
         else:
             print(" Il formato del file non è supportato")
-        
+
+    def leggi_file_tiff(self):
+
+        # Apri il file TIFF
+        with Image.open(self.filepath) as img:
+            # Converti l'immagine in una matrice NumPy
+            img_array = np.array(img)
+            return img_array
+                    
     
     def get_partenza():
         """
