@@ -15,8 +15,8 @@ filepath = input('Inserisci il path del file da leggere:  ')
 inputfile = input_file('./indata/'+filepath)
 dict = inputfile.leggi_file()
 print(dict)
-# Stampa la forma della matrice
-print(dict.shape)
+labirinto=inputfile.crea_labirinto_json(dict)
+print(labirinto)
 
     
     
