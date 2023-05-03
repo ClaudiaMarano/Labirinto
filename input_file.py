@@ -53,7 +53,37 @@ class input_file:
             # Converti l'immagine in una matrice NumPy
             img_array = np.array(img)
             return img_array
-                    
+    
+    def crea_labirinto_json(self,dict):
+        """
+        metodo che crea il labirito con di costi, direttamente dal un dizionario preso dal file json
+        
+        sono messe da valore nan
+
+        mancano le posizioni iniziali e quelle finali
+
+        restistituisce una matrice numpy
+        """
+        #creo una matrice numpy piena di zeri, con le grandezze del labirinto
+        labirinto= np.full((dict['altezza'], dict['larghezza']), float(0))
+        #creo le pareti sostiuendo gli zeri con nan
+        for i in range(len(dict['pareti'])):
+            if dict['pareti'][i]['orientamento']=='H':
+                indice1=int(dict['pareti'][i]['posizione'][0])
+                indice2=int(dict['pareti'][i]['posizione'][1])
+                indice3=int(dict['pareti'][i]['posizione'][1])+int(dict['pareti'][i]['lunghezza'])
+                labirinto[indice1,indice2:indice3]=np.nan
+            else:
+                indice1=int(dict['pareti'][i]['posizione'][0])
+                indice2=int(dict['pareti'][i]['posizione'][0])+int(dict['pareti'][i]['lunghezza'])
+                indice3=int(dict['pareti'][i]['posizione'][1])
+                labirinto[indice1:indice2,indice3]=np.nan
+        #sostuisco con il costo le posizioni specificate
+        for i in range(len(dict['costi'])):
+            posizione_orizzontale=dict['costi'][i][0]
+            posizione_verticale=dict['costi'][i][1]
+            labirinto[posizione_orizzontale,posizione_verticale]=float(dict['costi'][i][2])
+        return labirinto
     
     def get_partenza():
         """
