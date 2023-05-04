@@ -13,10 +13,12 @@ filepath = input('Inserisci il path del file da leggere:  ')
 
 #creo un'istanza della classe
 inputfile = input_file('./indata/'+filepath)
-dict = inputfile.leggi_file()
-print(dict)
-labirinto=inputfile.crea_labirinto_json(dict)
+(labirinto, partenze, destinazioni)= inputfile.leggi_file()
+#print(dict)
+
 print(labirinto)
+print(partenze)
+print(destinazioni)
 
     
     
