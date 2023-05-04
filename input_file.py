@@ -37,9 +37,11 @@ class input_file:
         if estensioneFile == '.json':
             with open(self.filepath) as file:
                 dictionary = json.load(file)
-            return dictionary
+                (labirinto, partenze, destinazioni)=input_file.crea_labirinto_json(self,dictionary)
+            return (labirinto, partenze, destinazioni)
         elif estensioneFile == '.tiff':
-            return input_file.leggi_file_tiff(self)
+            (labirinto, partenze, destinazioni)=input_file.leggi_file_tiff(self)
+            return (labirinto, partenze, destinazioni)
             
 
             #print("funzione ancora da implementare")
@@ -52,7 +54,8 @@ class input_file:
         with Image.open(self.filepath) as img:
             # Converti l'immagine in una matrice NumPy
             img_array = np.array(img)
-            return img_array
+            (labirinto, partenze, destinazioni)=input_file.crea_labirinto_tiff(self,img_array)
+            return (labirinto, partenze, destinazioni)
     
     def crea_labirinto_json(self,dict):
         """
@@ -62,10 +65,11 @@ class input_file:
 
         mancano le posizioni iniziali e quelle finali
 
-        restistituisce una matrice numpy
         """
         #creo una matrice numpy piena di zeri, con le grandezze del labirinto
-        labirinto= np.full((dict['altezza'], dict['larghezza']), float(0))
+        labirinto= np.full((dict['altezza'], dict['larghezza']), 0.)
+        partenze=dict['iniziali']
+        destinazioni=dict['finale']
         #creo le pareti sostiuendo gli zeri con nan
         for i in range(len(dict['pareti'])):
             if dict['pareti'][i]['orientamento']=='H':
@@ -83,7 +87,28 @@ class input_file:
             posizione_orizzontale=dict['costi'][i][0]
             posizione_verticale=dict['costi'][i][1]
             labirinto[posizione_orizzontale,posizione_verticale]=float(dict['costi'][i][2])
-        return labirinto
+        return (labirinto, partenze, destinazioni)
+    def crea_labirinto_tiff(self,img_array):
+        leggenda_colori={'[255 255 255]':0.,'[0 0 0]':np.nan,'[0 255 0]':0.,'[255 0 0]':0.,'[16 16 16]':1.,'[32 32 32]':2.,'[48 48 48]':3.,'[64 64 64]':4.,'[80 80 80]':5.,'[96 96 96]':6.,'[112 112 112]':7.,'[128 128 128]':8.,'[144 144 144]':9.,'[160 160 160]':10.,'[176 176 176]':11.,'[192 192 192]':12.,'[208 208 208]':13.,'[224 224 224]':14.,'[240 240 240]':15.}
+        forma_lab=img_array.shape
+        partenze=[]
+        destinazioni=[]
+        labirinto=np.full((forma_lab[0],forma_lab[1]),np.empty)
+        for i in range(forma_lab[0]):
+            for j in range(forma_lab[1]):
+                indice=f'[{img_array[i][j][0]} {img_array[i][j][1]} {img_array[i][j][2]}]'
+                labirinto[i,j]=leggenda_colori[indice]
+                if indice=='[255 0 0]':
+                    coordinate=[]
+                    coordinate.append(i)
+                    coordinate.append(j)
+                    destinazioni.append(coordinate)
+                elif indice=='[0 255 0]':
+                    coordinate=[]
+                    coordinate.append(i)
+                    coordinate.append(j)
+                    partenze.append(coordinate)    
+        return (labirinto, partenze, destinazioni)
     
     def get_partenza():
         """
