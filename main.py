@@ -9,7 +9,7 @@ il punto di arrivo o, in alternativa, se non esiste alcun percorso possibile.
 from input_file import input_file
 
 #fornire il file in input come: indata/nomefile.json
-filepath = input('Inserisci il path del file da leggere:  ')
+filepath = input('Inserisci il nome del file da leggere compreso il formato del file:  ')
 
 #creo un'istanza della classe
 inputfile = input_file('./indata/'+filepath)
