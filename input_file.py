@@ -135,33 +135,3 @@ class input_file:
                     partenze.append(coordinate)    
         return (labirinto, partenze, destinazioni)
     
-    def get_partenza():
-        """
-        
-
-        Returns
-        -------
-        None.
-
-        """
-        return
-        
-    def get_arrivo():
-        """
-        
-
-        Returns
-        -------
-        None.
-
-        """
-        return
-    
-    
-
-         
-        
-        
-
-        
-        

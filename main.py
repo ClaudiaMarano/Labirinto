@@ -7,6 +7,7 @@ il punto di arrivo o, in alternativa, se non esiste alcun percorso possibile.
 """
 
 from input_file import input_file
+from Calcolatore import Nodo
 
 #fornire il file in input come: indata/nomefile.json
 filepath = input('Inserisci il nome del file da leggere compreso il formato del file:  ')
@@ -15,6 +16,8 @@ filepath = input('Inserisci il nome del file da leggere compreso il formato del 
 inputfile = input_file('./indata/'+filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
 #print(dict)
+nodo=Nodo()
+grafo=nodo.crea_grafo(labirinto)
 
 print(labirinto)
 print(partenze)
