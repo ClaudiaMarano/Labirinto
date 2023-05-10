@@ -18,17 +18,6 @@ inputfile = input_file('./indata/'+filepath)
 grafo , matrice = input_file.crea_grafo(labirinto)
 
 
-
-
-#print(dict)
-#matriceAdiacenza=inputfile.matrice_adiacenza(labirinto)
-
-# nodo=Nodo()
-# grafo = nodo.crea_grafo(labirinto,partenze,destinazioni)
-
-
-
-
 print(labirinto)
 print(partenze)
 print(destinazioni)
