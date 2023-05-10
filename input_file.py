@@ -6,6 +6,7 @@ import os
 import json
 from PIL import Image
 import numpy as np
+import networkx as nx
 
 class input_file:
    
@@ -135,3 +136,45 @@ class input_file:
                     partenze.append(coordinate)    
         return (labirinto, partenze, destinazioni)
     
+    
+    
+    def crea_grafo(labirinto):
+        
+        #creo un'istanza del grafo
+        G = nx.Graph()
+     
+        for i, row in (enumerate(labirinto)): #i tiene traccia della riga, row contiene la riga
+            for j, val in enumerate(row): #j tiene conto della colonna, val del valore della cella
+                if not np.isnan(val): #se l'elemento della cella non è nan 
+                
+                #controlla se la cella corrente ha una cella adiacente sopra di essa, 
+                #e se quella cella adiacente non è un valore mancante.
+                    if i > 0 and not np.isnan(labirinto[i-1, j]):
+                        G.add_edge((i, j), (i-1, j), weight=1) #aggiungo arco di peso unitario
+                    
+                    if j > 0 and not np.isnan(labirinto[i, j-1]):
+                        G.add_edge((i, j), (i,j-1), weight=1)
+                        
+                    # Riguarda le ultime caselle
+                    if i < labirinto.shape[0]-1 and not np.isnan(labirinto[i+1, j]):
+                        G.add_edge((i, j), (i+1, j), weight=1)
+                    if j < labirinto.shape[0]-1 and not np.isnan(labirinto[i, j+1]):
+                        G.add_edge((i, j), (i, j+1), weight=1)
+                        
+        adj_matrix = nx.to_numpy_matrix(G)
+
+        return G, adj_matrix
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+

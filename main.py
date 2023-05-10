@@ -7,7 +7,7 @@ il punto di arrivo o, in alternativa, se non esiste alcun percorso possibile.
 """
 
 from input_file import input_file
-from Calcolatore import Nodo
+# from Calcolatore import Nodo
 
 #fornire il file in input come: indata/nomefile.json
 filepath = input('Inserisci il nome del file da leggere compreso il formato del file:  ')
@@ -15,9 +15,19 @@ filepath = input('Inserisci il nome del file da leggere compreso il formato del 
 #creo un'istanza della classe
 inputfile = input_file('./indata/'+filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
+grafo , matrice = input_file.crea_grafo(labirinto)
+
+
+
+
 #print(dict)
-nodo=Nodo()
-grafo=nodo.crea_grafo(labirinto)
+#matriceAdiacenza=inputfile.matrice_adiacenza(labirinto)
+
+# nodo=Nodo()
+# grafo = nodo.crea_grafo(labirinto,partenze,destinazioni)
+
+
+
 
 print(labirinto)
 print(partenze)
