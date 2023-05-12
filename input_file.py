@@ -53,6 +53,8 @@ class input_file:
 
                 #print("funzione ancora da implementare")
         except:
+            lista_file = os.listdir('./indata/')
+            print(lista_file)
             self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
             return input_file.leggi_file(self)
 
@@ -184,7 +186,7 @@ class input_file:
                         G.add_edge((i, j), (i+1, j), weight=1)
                     if j < labirinto.shape[0]-1 and not np.isnan(labirinto[i, j+1]):
                         G.add_edge((i, j), (i, j+1), weight=1)
-        adj_matrix = nx.to_numpy_matrix(G)
+        adj_matrix = nx.to_numpy_array(G)
         return G, adj_matrix
     
     

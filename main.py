@@ -14,7 +14,7 @@ from input_file import input_file
 lista_file = os.listdir('./indata/')
 print(lista_file)
 #fornire il file in input come: indata/nomefile.json
-filepath = str(input('Inserisci il nome del file da leggere compreso il formato del file tra uno di quelli elencati:  '))
+filepath = str(input('Inserisci il nome del file da leggere con formato tiff o json tra uno di quelli elencati:  '))
 #creo un'istanza della classe
 inputfile = input_file('./indata/'+filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
@@ -26,6 +26,7 @@ costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
 
 grafo , matrice = input_file.crea_grafo(labirinto)
 costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
+print(path)
 
 
 print(labirinto)
