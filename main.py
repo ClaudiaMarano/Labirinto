@@ -6,18 +6,39 @@ il punto di arrivo o, in alternativa, se non esiste alcun percorso possibile.
 
 """
 
+import os
 from input_file import input_file
 # from Calcolatore import Nodo
 
+# ottieni i nomi dei file e delle cartelle nella directory
+lista_file = os.listdir('./indata/')
+print(lista_file)
 #fornire il file in input come: indata/nomefile.json
-filepath = input('Inserisci il nome del file da leggere compreso il formato del file:  ')
-
+filepath = str(input('Inserisci il nome del file da leggere compreso il formato del file tra uno di quelli elencati:  '))
 #creo un'istanza della classe
 inputfile = input_file('./indata/'+filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
 grafo , matrice = input_file.crea_grafo(labirinto)
 costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
 
+#grafo , matrice = input_file.crea_grafo(labirinto)
+
+
+grafo , matrice = input_file.crea_grafo(labirinto)
+costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
+
+
 print(labirinto)
-print(partenze)
+print(partenze)  
 print(destinazioni)
+
+    
+    
+
+
+
+    
+    
+    
+    
+    
