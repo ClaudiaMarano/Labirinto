@@ -5,8 +5,7 @@
 
 import json
 
-class gestisci_input():
-    
+class gestisci_input():  
     def __init__(self):
         self.percorsoFile=('./indata/20-10_marked.json')
     

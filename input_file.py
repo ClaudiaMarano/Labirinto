@@ -39,20 +39,22 @@ class input_file:
         None.
 
         """
-        nome,estensioneFile = os.path.splitext(self.filepath)
-        if estensioneFile == '.json':
-            with open(self.filepath) as file:
-                dictionary = json.load(file)
-                (labirinto, partenze, destinazioni)=input_file.crea_labirinto_json(self,dictionary)
-            return (labirinto, partenze, destinazioni)
-        elif estensioneFile == '.tiff':
-            (labirinto, partenze, destinazioni)=input_file.leggi_file_tiff(self)
-            return (labirinto, partenze, destinazioni)
-            
+        try:
+            nome,estensioneFile = os.path.splitext(self.filepath)
+            if estensioneFile == '.json':
+                with open(self.filepath) as file:
+                    dictionary = json.load(file)
+                    (labirinto, partenze, destinazioni)=input_file.crea_labirinto_json(self,dictionary)
+                return (labirinto, partenze, destinazioni)
+            elif estensioneFile == '.tiff':
+                (labirinto, partenze, destinazioni)=input_file.leggi_file_tiff(self)
+                return (labirinto, partenze, destinazioni)
+                
 
-            #print("funzione ancora da implementare")
-        else:
-            print(" Il formato del file non è supportato")
+                #print("funzione ancora da implementare")
+        except:
+            self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
+            return input_file.leggi_file(self)
 
     def leggi_file_tiff(self):
         """
@@ -76,15 +78,14 @@ class input_file:
         """
         inpunt: dizionario con caratteristiche del labirinto
 
-        metodo che crea il labirinto sostituendo nelle coordinate specificate nel dizionario i costi corrispondenti 
+        metodo che crea il labirito sostituendo nelle coordinate specificate nel dizionario i costi corrispondenti 
         e pone al posto delle pareti il valore nan.
         inoltre salva in una lista di liste le posizioni di partenza e di destinazione.
 
         output: matrice labirinto, lista delle posizioni di partenza e lista delle posizioni di destinazione
         """
-        
         #creo una matrice numpy piena di zeri, con le grandezze del labirinto
-        labirinto= np.full((dict['altezza'], dict['larghezza']), 1.)
+        labirinto= np.full((dict['altezza'], dict['larghezza']), 0.)
         partenze=dict['iniziali']
         destinazioni=dict['finale']
         #creo le pareti sostiuendo gli zeri con nan
@@ -93,7 +94,7 @@ class input_file:
                 indice1=int(dict['pareti'][i]['posizione'][0])
                 indice2=int(dict['pareti'][i]['posizione'][1])
                 indice3=int(dict['pareti'][i]['posizione'][1])+int(dict['pareti'][i]['lunghezza'])
-                labirinto[indice1,indice2:indice3]=np.nan #assegno valore nan alle pareti
+                labirinto[indice1,indice2:indice3]=np.nan
             else:
                 indice1=int(dict['pareti'][i]['posizione'][0])
                 indice2=int(dict['pareti'][i]['posizione'][0])+int(dict['pareti'][i]['lunghezza'])
@@ -136,7 +137,28 @@ class input_file:
                     coordinate.append(j)
                     partenze.append(coordinate)    
         return (labirinto, partenze, destinazioni)
-    
+    def get_partenza():
+        """
+        
+
+        Returns
+        -------
+        None.
+
+        """
+        return
+        
+    def get_arrivo():
+        """
+        
+
+        Returns
+        -------
+        None.
+
+        """
+        return
+
     def crea_nodi(labirinto):
         G = nx.Graph()
         for i, row in enumerate(labirinto):
@@ -222,5 +244,4 @@ class input_file:
     
     
     
-        
         
