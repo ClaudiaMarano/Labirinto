@@ -7,6 +7,7 @@ import json
 from PIL import Image
 import numpy as np
 import networkx as nx
+import heapq
 
 class input_file:
    
@@ -136,10 +137,15 @@ class input_file:
                     partenze.append(coordinate)    
         return (labirinto, partenze, destinazioni)
     
+    def crea_nodi(labirinto):
+        G = nx.Graph()
+        for i, row in enumerate(labirinto):
+            for j, val in enumerate(row):
+                if not np.isnan(val):
+                    G.add_node((i, j), weight=1)
     
     
     def crea_grafo(labirinto):
-        
         #creo un'istanza del grafo
         G = nx.Graph()
         for i, row in (enumerate(labirinto)): #i tiene traccia della riga, row contiene la riga
@@ -147,7 +153,6 @@ class input_file:
                 if not np.isnan(val): #se l'elemento della cella non è nan 
                 #controlla se la cella corrente ha una cella adiacente sopra di essa, 
                 #e se quella cella adiacente non è un valore mancante.
-                
                     if i > 0 and not np.isnan(labirinto[i-1, j]):
                         G.add_edge((i, j), (i-1, j), weight=1) #aggiungo arco di peso unitario
                     if j > 0 and not np.isnan(labirinto[i, j-1]):
@@ -157,21 +162,65 @@ class input_file:
                         G.add_edge((i, j), (i+1, j), weight=1)
                     if j < labirinto.shape[0]-1 and not np.isnan(labirinto[i, j+1]):
                         G.add_edge((i, j), (i, j+1), weight=1)
-        
         adj_matrix = nx.to_numpy_matrix(G)
-
         return G, adj_matrix
+    
+    
+    
+    
+    def dijikstra(grafo, partenze, destinazioni):
+        """
+        Prende in input il grafo G, il nodo di partenza start e il nodo di arrivo end.
+        Utilizza una coda di priorità (implementata come un heap binario) per esplorare i
+        nodi del grafo in ordine di costo crescente. Ad ogni iterazione, estrae il nodo
+        con il costo più basso dalla coda di priorità e aggiunge i suoi vicini alla coda
+        di priorità con il costo aggiornato.
+
+        Returns
+        -------
+        None.
+
+        """
+        partenze=tuple(partenze[0])
+        destinazioni=tuple(destinazioni[0])
+        #Creo una coda di priorità: inserisco i nodi in ordine crescente di peso
+        heap = [partenze]
+        visited = [] #definisco un insieme vuoto dei nodi visitati
+        cost = 0
+        
+        #continua finchè la coda di priorità non è vuota
+        while heap:
+            # Estrai il nodo con la priorità più bassa
+            lowNode = heapq.heappop(heap) #nodo con priorità piu bassa
+            nodoConsiderato=lowNode
+            path = [nodoConsiderato]
+            #nodoConsiderato = lowNode #estrae il nodo corrente dal percorso estratto.
+            
+            #verfico se il nodo estratto dalla coda è la destinazione;
+            #se lo è, restituisce il percorso e il costo
+            if nodoConsiderato == destinazioni:
+                cost=1
+                path=[nodoConsiderato]
+            
+            elif nodoConsiderato not in visited: #se il nodo non è stato visitato
+                visited.append(nodoConsiderato)
+                vicini = list(nx.neighbors(grafo,nodoConsiderato))
+                for neighbor in vicini: #per ogni vicino del nodo considerato
+                    weight = grafo[nodoConsiderato][neighbor]['weight']
+                    cost = cost + weight
+                    path = list(path)
+                    path.append(neighbor)
+                    heapq.heappush(heap, (cost, path))  #Controlla questa rig
+                
+            return cost, path
+            
+       
+            
         
         
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+        
+        

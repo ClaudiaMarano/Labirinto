@@ -16,19 +16,8 @@ filepath = input('Inserisci il nome del file da leggere compreso il formato del 
 inputfile = input_file('./indata/'+filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
 grafo , matrice = input_file.crea_grafo(labirinto)
-
+costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
 
 print(labirinto)
 print(partenze)
 print(destinazioni)
-
-    
-    
-
-
-
-    
-    
-    
-    
-    
