@@ -21,7 +21,7 @@ inputfile = input_file('./indata/'+filepath)
 grafo , matrice = input_file.crea_grafo(labirinto)
 
 
-cammini, weight = input_file.trova_tutti_i_cammini(grafo, partenze, destinazioni)
+cammini, peso_cammini = input_file.trova_tutti_i_cammini(grafo, partenze, destinazioni)
 #costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
 
 #grafo , matrice = input_file.crea_grafo(labirinto)

@@ -205,6 +205,7 @@ class input_file:
         partenze_set = set(partenze)
         destinazioni_set = set(destinazioni)
         cammini = []
+        peso_cammini=[]
         # scorri tutte le coppie di partenza e destinazione
         for nodo_p in partenze_set:
             for nodo_d in destinazioni_set:
@@ -216,19 +217,16 @@ class input_file:
                             try:
                                 
                                 #Returns the shortest weighted path from source to target in G.
-                                cammino = nx.dijkstra_path(grafo, nodo_p, nodo_d)
-                                
-                                cammini.append(cammino)
-                                
+                                cammino_minimo = nx.dijkstra_path(grafo, nodo_p, nodo_d)
+                                cammini.append(cammino_minimo)
                                 #Returns the shortest weighted path length in G from source to target
-                                shortest_weight= nx.dijkstra_path_length(grafo, nodo_p, nodo_d)
-                                
-                                #shortest_paths = nx.shortest_path(grafo, partenze, destinazioni, weight=None, method='dijkstra')
+                                peso_cammino=nx.dijkstra_path_length(grafo, nodo_p, nodo_d)
+                                peso_cammini.append(peso_cammino)
     
                             except nx.NodeNotFound:
                                 pass
                              
-        return cammini, shortest_weight
+        return cammini,peso_cammini
     
     
     
