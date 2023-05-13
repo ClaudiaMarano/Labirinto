@@ -8,6 +8,7 @@ from PIL import Image
 import numpy as np
 import networkx as nx
 import heapq
+import matplotlib as plt
 
 class input_file:
    
@@ -137,8 +138,11 @@ class input_file:
                     coordinate=[]
                     coordinate.append(i)
                     coordinate.append(j)
-                    partenze.append(coordinate)    
+                    partenze.append(coordinate)
+        
+        
         return (labirinto, partenze, destinazioni)
+    
     def get_partenza():
         """
         
@@ -189,54 +193,114 @@ class input_file:
         adj_matrix = nx.to_numpy_array(G)
         return G, adj_matrix
     
+    def trova_tutti_i_cammini(grafo, partenze, destinazioni):
+        #partenze=tuple(partenze[0])
+        #destinazioni=tuple(destinazioni[0])
+        # Trasforma ogni sottolista in una tupla
+        partenze=[tuple(sublist) for sublist in partenze]
+        partenze=tuple(partenze)
+        destinazioni=[tuple(sublist) for sublist in destinazioni]
+        destinazioni=tuple(destinazioni)
+        # converti in insiemi di nodi
+        partenze_set = set(partenze)
+        destinazioni_set = set(destinazioni)
+        cammini = []
+        # scorri tutte le coppie di partenza e destinazione
+        for nodo_p in partenze_set:
+            for nodo_d in destinazioni_set:
+                # verifico che i nodi di partenza e destinazione siano nel grafo
+                if grafo.has_node(nodo_p) and grafo.has_node(nodo_d):
+                    # verifico che esista un percorso dal nodo di partenza a quello di destinazione
+                    for nodo_p in partenze_set:
+                        for nodo_d in destinazioni_set:
+                            try:
+                                
+                                #Returns the shortest weighted path from source to target in G.
+                                cammino = nx.dijkstra_path(grafo, nodo_p, nodo_d)
+                                
+                                cammini.append(cammino)
+                                
+                                #Returns the shortest weighted path length in G from source to target
+                                shortest_weight= nx.dijkstra_path_length(grafo, nodo_p, nodo_d)
+                                
+                                #shortest_paths = nx.shortest_path(grafo, partenze, destinazioni, weight=None, method='dijkstra')
+    
+                            except nx.NodeNotFound:
+                                pass
+                             
+        return cammini, shortest_weight
     
     
     
-    def dijikstra(grafo, partenze, destinazioni):
-        """
-        Prende in input il grafo G, il nodo di partenza start e il nodo di arrivo end.
-        Utilizza una coda di priorità (implementata come un heap binario) per esplorare i
-        nodi del grafo in ordine di costo crescente. Ad ogni iterazione, estrae il nodo
-        con il costo più basso dalla coda di priorità e aggiunge i suoi vicini alla coda
-        di priorità con il costo aggiornato.
-
-        Returns
-        -------
-        None.
-
-        """
-        partenze=tuple(partenze[0])
-        destinazioni=tuple(destinazioni[0])
-        #Creo una coda di priorità: inserisco i nodi in ordine crescente di peso
-        heap = [partenze]
-        visited = [] #definisco un insieme vuoto dei nodi visitati
-        cost = 0
+    
+    def plot_grafo(G):
         
-        #continua finchè la coda di priorità non è vuota
-        while heap:
-            # Estrai il nodo con la priorità più bassa
-            lowNode = heapq.heappop(heap) #nodo con priorità piu bassa
-            nodoConsiderato=lowNode
-            path = [nodoConsiderato]
-            #nodoConsiderato = lowNode #estrae il nodo corrente dal percorso estratto.
+        pos = nx.spring_layout(G) # posizionamento dei nodi
+        nx.draw_networkx_nodes(G, pos, node_color='lightblue') # disegna i nodi
+        nx.draw_networkx_edges(G, pos, edge_color='grey') # disegna gli archi
+        nx.draw_networkx_labels(G, pos, font_size=10, font_family='sans-serif') # disegna le etichette dei nodi
+
+        # mostra il grafo
+        plt.axis('off') # rimuove gli assi
+        plt.show()
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+    # def dijikstra(grafo, partenze, destinazioni):
+    #     """
+    #     Prende in input il grafo G, il nodo di partenza start e il nodo di arrivo end.
+    #     Utilizza una coda di priorità (implementata come un heap binario) per esplorare i
+    #     nodi del grafo in ordine di costo crescente. Ad ogni iterazione, estrae il nodo
+    #     con il costo più basso dalla coda di priorità e aggiunge i suoi vicini alla coda
+    #     di priorità con il costo aggiornato.
+
+    #     Returns
+    #     -------
+    #     None.
+
+    #     """
+    #     partenze=tuple(partenze[0])
+    #     destinazioni=tuple(destinazioni[0])
+    #     #Creo una coda di priorità: inserisco i nodi in ordine crescente di peso
+    #     heap = [partenze]
+    #     visited = [] #definisco un insieme vuoto dei nodi visitati
+    #     cost = 0
+        
+    #     #continua finchè la coda di priorità non è vuota
+    #     while heap:
+    #         # Estrai il nodo con la priorità più bassa
+    #         lowNode = heapq.heappop(heap) #nodo con priorità piu bassa
+    #         nodoConsiderato=lowNode
+    #         path = [nodoConsiderato]
+    #         #nodoConsiderato = lowNode #estrae il nodo corrente dal percorso estratto.
             
-            #verfico se il nodo estratto dalla coda è la destinazione;
-            #se lo è, restituisce il percorso e il costo
-            if nodoConsiderato == destinazioni:
-                cost=1
-                path=[nodoConsiderato]
+    #         #verfico se il nodo estratto dalla coda è la destinazione;
+    #         #se lo è, restituisce il percorso e il costo
+    #         if nodoConsiderato == destinazioni:
+    #             cost=1
+    #             path=[nodoConsiderato]
             
-            elif nodoConsiderato not in visited: #se il nodo non è stato visitato
-                visited.append(nodoConsiderato)
-                vicini = list(nx.neighbors(grafo,nodoConsiderato))
-                for neighbor in vicini: #per ogni vicino del nodo considerato
-                    weight = grafo[nodoConsiderato][neighbor]['weight']
-                    cost = cost + weight
-                    path = list(path)
-                    path.append(neighbor)
-                    heapq.heappush(heap, (cost, path))  #Controlla questa rig
+    #         elif nodoConsiderato not in visited: #se il nodo non è stato visitato
+    #             visited.append(nodoConsiderato)
+    #             vicini = list(nx.neighbors(grafo,nodoConsiderato))
+    #             for neighbor in vicini: #per ogni vicino del nodo considerato
+    #                 weight = grafo[nodoConsiderato][neighbor]['weight']
+    #                 cost = cost + weight
+    #                 path = list(path)
+    #                 path.append(neighbor)
+    #                 heapq.heappush(heap, (cost, path))  #Controlla questa rig
                 
-            return cost, path
+    #         return cost, path
             
        
             

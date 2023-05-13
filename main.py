@@ -19,14 +19,17 @@ filepath = str(input('Inserisci il nome del file da leggere con formato tiff o j
 inputfile = input_file('./indata/'+filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
 grafo , matrice = input_file.crea_grafo(labirinto)
-costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
+
+
+cammini, weight = input_file.trova_tutti_i_cammini(grafo, partenze, destinazioni)
+#costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
 
 #grafo , matrice = input_file.crea_grafo(labirinto)
 
 
-grafo , matrice = input_file.crea_grafo(labirinto)
-costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
-print(path)
+#grafo , matrice = input_file.crea_grafo(labirinto)
+#costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
+#print(path)
 
 
 print(labirinto)
