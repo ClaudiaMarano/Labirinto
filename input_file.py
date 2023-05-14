@@ -202,11 +202,15 @@ class input_file:
         partenze=tuple(partenze)
         destinazioni=[tuple(sublist) for sublist in destinazioni]
         destinazioni=tuple(destinazioni)
-        
+        #Calcolo tutti i possibili cammini fra partenza/e e destinazione/i
+        cammini = []
+        for partenza in partenze:
+            for destinazione in destinazioni:
+                cammini.extend(list(nx.all_simple_paths(grafo, source=partenza, target=destinazione)))
+                
         # converti in insiemi di nodi
         partenze_set = set(partenze)
         destinazioni_set = set(destinazioni)
-        
         cammini_minimi = [] #calcola i cammini minimi fra partenza/e e destinazione/i
         peso_cammini_minimi=[]
         # scorri tutte le coppie di partenza e destinazione
@@ -226,7 +230,7 @@ class input_file:
                     except nx.NodeNotFound:
                         pass
                     
-        return cammini_minimi, peso_cammini_minimi
+        return cammini, cammini_minimi, peso_cammini_minimi
 
     
 
