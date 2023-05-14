@@ -143,27 +143,6 @@ class input_file:
         
         return (labirinto, partenze, destinazioni)
     
-    def get_partenza():
-        """
-        
-
-        Returns
-        -------
-        None.
-
-        """
-        return
-        
-    def get_arrivo():
-        """
-        
-
-        Returns
-        -------
-        None.
-
-        """
-        return
 
     def crea_nodi(labirinto):
         G = nx.Graph()
@@ -195,19 +174,24 @@ class input_file:
     
     
     def trova_tutti_i_cammini(grafo, partenze, destinazioni):
-        #partenze=tuple(partenze[0])
-        #destinazioni=tuple(destinazioni[0])
+        
         # Trasforma ogni sottolista in una tupla
         partenze=[tuple(sublist) for sublist in partenze]
         partenze=tuple(partenze)
         destinazioni=[tuple(sublist) for sublist in destinazioni]
         destinazioni=tuple(destinazioni)
+        
         #Calcolo tutti i possibili cammini fra partenza/e e destinazione/i
         cammini = []
         for partenza in partenze:
             for destinazione in destinazioni:
-                cammini.extend(list(nx.all_simple_paths(grafo, source=partenza, target=destinazione)))
-                
+                if grafo.has_node(partenza) and grafo.has_node(destinazione):
+                    if nx.has_path(grafo,partenza,destinazione):
+                        try:
+                            cammini.extend(list(nx.all_simple_paths(grafo, source=partenza, target=destinazione)))
+                        except nx.NodeNotFound:
+                          pass
+        
         # converti in insiemi di nodi
         partenze_set = set(partenze)
         destinazioni_set = set(destinazioni)
@@ -218,17 +202,18 @@ class input_file:
             for nodo_d in destinazioni_set:
                 # verifico che i nodi di partenza e destinazione siano nel grafo
                 if grafo.has_node(nodo_p) and grafo.has_node(nodo_d):
-                    try:
-                        #Returns the shortest weighted path from source to target in G.
-                        cammino_minimo = nx.dijkstra_path(grafo, nodo_p, nodo_d)
-                        cammini_minimi.append(cammino_minimo)
+                    if nx.has_path(grafo,nodo_p,nodo_d):
+                        try:
+                            #Returns the shortest weighted path from source to target in G.
+                            cammino_minimo = nx.dijkstra_path(grafo, nodo_p, nodo_d)
+                            cammini_minimi.append(cammino_minimo)
+                            
+                            #Returns the shortest weighted path length in G from source to target
+                            peso_cammino=nx.dijkstra_path_length(grafo, nodo_p, nodo_d)
+                            peso_cammini_minimi.append(peso_cammino)
                         
-                        #Returns the shortest weighted path length in G from source to target
-                        peso_cammino=nx.dijkstra_path_length(grafo, nodo_p, nodo_d)
-                        peso_cammini_minimi.append(peso_cammino)
-
-                    except nx.NodeNotFound:
-                        pass
+                        except nx.NodeNotFound:
+                          pass
                     
         return cammini, cammini_minimi, peso_cammini_minimi
 
