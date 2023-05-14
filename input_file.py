@@ -193,6 +193,7 @@ class input_file:
         adj_matrix = nx.to_numpy_array(G)
         return G, adj_matrix
     
+    
     def trova_tutti_i_cammini(grafo, partenze, destinazioni):
         #partenze=tuple(partenze[0])
         #destinazioni=tuple(destinazioni[0])
@@ -225,16 +226,16 @@ class input_file:
                     except nx.NodeNotFound:
                         pass
                     
-        return cammini_minimi,peso_cammini_minimi
+        return cammini_minimi, peso_cammini_minimi
 
     
+
+
     def plot_grafo(G):
-        
         pos = nx.spring_layout(G) # posizionamento dei nodi
         nx.draw_networkx_nodes(G, pos, node_color='lightblue') # disegna i nodi
         nx.draw_networkx_edges(G, pos, edge_color='grey') # disegna gli archi
         nx.draw_networkx_labels(G, pos, font_size=10, font_family='sans-serif') # disegna le etichette dei nodi
-
         # mostra il grafo
         plt.axis('off') # rimuove gli assi
         plt.show()
