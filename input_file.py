@@ -9,6 +9,7 @@ import numpy as np
 import networkx as nx
 import heapq
 import matplotlib as plt
+import pandas as pd
 
 class input_file:
    
@@ -189,15 +190,18 @@ class input_file:
         
         #Calcolo tutti i possibili cammini fra partenza/e e destinazione/i
         cammini = []
+        peso_cammini=[]
         for partenza in partenze:
             for destinazione in destinazioni:
                 if grafo.has_node(partenza) and grafo.has_node(destinazione):
                     if nx.has_path(grafo,partenza,destinazione):
                         try:
                             cammini.extend(list(nx.all_simple_paths(grafo, source=partenza, target=destinazione)))
+                            
                         except nx.NodeNotFound:
                           pass
-        
+        for cammino in cammini:
+            peso_cammini.append(len(cammino))
         # converti in insiemi di nodi
         partenze_set = set(partenze)
         destinazioni_set = set(destinazioni)
@@ -220,9 +224,11 @@ class input_file:
                         
                         except nx.NodeNotFound:
                           pass
-                    
-        return cammini, cammini_minimi, peso_cammini_minimi
-
+        #creo un dataFrame con i risultati di tutti i cammini
+        serie_cammini = pd.Series(cammini)
+        serie_pesi = pd.Series(peso_cammini)
+        dataframe = pd.DataFrame({'Cammini': serie_cammini, 'Pesi': serie_pesi})
+        return cammini, cammini_minimi, peso_cammini_minimi, dataframe
     
 
 
