@@ -41,31 +41,25 @@ class input_file:
         None.
 
         """
+    
         try:
-            try:
-                nome,estensioneFile = os.path.splitext(self.filepath)
-                if estensioneFile == '.json':
-                    with open(self.filepath) as file:
-                        dictionary = json.load(file)
-                        (labirinto, partenze, destinazioni)=input_file.crea_labirinto_json(self,dictionary)
+            nome,estensioneFile = os.path.splitext(self.filepath)
+            if estensioneFile == '.json':
+                with open(self.filepath) as file:
+                    dictionary = json.load(file)
+                    (labirinto, partenze, destinazioni)=input_file.crea_labirinto_json(self,dictionary)
                     return (labirinto, partenze, destinazioni)
-                elif estensioneFile == '.tiff':
-                    (labirinto, partenze, destinazioni)=input_file.leggi_file_tiff(self)
-                    return (labirinto, partenze, destinazioni)
-                    
+            elif estensioneFile == '.tiff':
+                (labirinto, partenze, destinazioni)=input_file.leggi_file_tiff(self)
+                return (labirinto, partenze, destinazioni)                   
 
                     #print("funzione ancora da implementare")
-            except TypeError:
-                lista_file = os.listdir('./indata/')
-                print(lista_file)
-                self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
-                return input_file.leggi_file(self)
-        except:
+        except TypeError:
             lista_file = os.listdir('./indata/')
             print(lista_file)
             self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
             return input_file.leggi_file(self)
-
+    
     def leggi_file_tiff(self):
         """
         input:self.path della classe
@@ -95,7 +89,7 @@ class input_file:
         output: matrice labirinto, lista delle posizioni di partenza e lista delle posizioni di destinazione
         """
         #creo una matrice numpy piena di zeri, con le grandezze del labirinto
-        labirinto= np.full((dict['altezza'], dict['larghezza']), 0.)
+        labirinto= np.full((dict['altezza'], dict['larghezza']), 1.)
         partenze=dict['iniziali']
         destinazioni=dict['finale']
         #creo le pareti sostiuendo gli zeri con nan
@@ -127,7 +121,7 @@ class input_file:
 
         output: matrice labirinto, lista delle posizioni di partenza e lista delle posizioni di destinazione
         """
-        leggenda_colori={'[255 255 255]':0.,'[0 0 0]':np.nan,'[0 255 0]':0.,'[255 0 0]':0.,'[16 16 16]':1.,'[32 32 32]':2.,'[48 48 48]':3.,'[64 64 64]':4.,'[80 80 80]':5.,'[96 96 96]':6.,'[112 112 112]':7.,'[128 128 128]':8.,'[144 144 144]':9.,'[160 160 160]':10.,'[176 176 176]':11.,'[192 192 192]':12.,'[208 208 208]':13.,'[224 224 224]':14.,'[240 240 240]':15.}
+        leggenda_colori={'[255 255 255]':1.,'[0 0 0]':np.nan,'[0 255 0]':0.,'[255 0 0]':0.,'[16 16 16]':1.,'[32 32 32]':2.,'[48 48 48]':3.,'[64 64 64]':4.,'[80 80 80]':5.,'[96 96 96]':6.,'[112 112 112]':7.,'[128 128 128]':8.,'[144 144 144]':9.,'[160 160 160]':10.,'[176 176 176]':11.,'[192 192 192]':12.,'[208 208 208]':13.,'[224 224 224]':14.,'[240 240 240]':15.}
         forma_lab=img_array.shape
         partenze=[]
         destinazioni=[]
@@ -224,11 +218,42 @@ class input_file:
                         
                         except nx.NodeNotFound:
                           pass
+<<<<<<< Updated upstream
         #creo un dataFrame con i risultati di tutti i cammini
         serie_cammini = pd.Series(cammini)
         serie_pesi = pd.Series(peso_cammini)
         dataframe = pd.DataFrame({'Cammini': serie_cammini, 'Pesi': serie_pesi})
         return cammini, cammini_minimi, peso_cammini_minimi, dataframe
+=======
+                    
+        return cammini, cammini_minimi, peso_cammini_minimi
+    
+    def trova_tutti_i_cammini_depth(grafo, partenze, destinazioni):
+    # Convert partenze and destinazioni to tuples
+        partenze = [tuple(sublist) for sublist in partenze]
+        partenze = tuple(partenze)
+        destinazioni = [tuple(sublist) for sublist in destinazioni]
+        destinazioni = tuple(destinazioni)
+
+        cammini = []
+        cammini_minimi = []
+        peso_cammini_minimi = []
+
+        for partenza in partenze:
+            for destinazione in destinazioni:
+                if grafo.has_node(partenza) and grafo.has_node(destinazione):
+                    try:
+                        # Use depth-first search to find all paths
+                        paths = nx.all_simple_paths(grafo, source=partenza, target=destinazione)
+                        cammini.extend(paths)
+                    except nx.NetworkXNoPath:
+                        pass
+
+        return cammini, cammini_minimi, peso_cammini_minimi
+
+
+
+>>>>>>> Stashed changes
     
 
 
