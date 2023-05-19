@@ -25,14 +25,18 @@ cammini, cammini_minimi, peso_cammini_minimo, dataFrame = input_file.trova_tutti
 
 #costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
 #print(path)
-
+for i in range(len(partenze)):
+    immagine_rgb = input_file.crea_immagine_rgb(labirinto, partenze[i],destinazioni, cammini_minimi[i])
+    print(immagine_rgb.shape)
+    percorso_output='./output/'+f'soluzione_ottima{i+1}.jpeg'
+    input_file.salva_immagine_jpg(immagine_rgb, percorso_output)
 
 print(labirinto)
 print(partenze)  
 print(destinazioni)
-print(peso_cammini_minimi)
-print(cammini)
-print(cammini_minimi)
+print(peso_cammini_minimo)
+#print(cammini)
+#print(cammini_minimi)
 
     
     

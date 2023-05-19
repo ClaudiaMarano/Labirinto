@@ -218,42 +218,13 @@ class input_file:
                         
                         except nx.NodeNotFound:
                           pass
-<<<<<<< Updated upstream
         #creo un dataFrame con i risultati di tutti i cammini
         serie_cammini = pd.Series(cammini)
         serie_pesi = pd.Series(peso_cammini)
         dataframe = pd.DataFrame({'Cammini': serie_cammini, 'Pesi': serie_pesi})
         return cammini, cammini_minimi, peso_cammini_minimi, dataframe
-=======
-                    
-        return cammini, cammini_minimi, peso_cammini_minimi
-    
-    def trova_tutti_i_cammini_depth(grafo, partenze, destinazioni):
-    # Convert partenze and destinazioni to tuples
-        partenze = [tuple(sublist) for sublist in partenze]
-        partenze = tuple(partenze)
-        destinazioni = [tuple(sublist) for sublist in destinazioni]
-        destinazioni = tuple(destinazioni)
-
-        cammini = []
-        cammini_minimi = []
-        peso_cammini_minimi = []
-
-        for partenza in partenze:
-            for destinazione in destinazioni:
-                if grafo.has_node(partenza) and grafo.has_node(destinazione):
-                    try:
-                        # Use depth-first search to find all paths
-                        paths = nx.all_simple_paths(grafo, source=partenza, target=destinazione)
-                        cammini.extend(paths)
-                    except nx.NetworkXNoPath:
-                        pass
-
-        return cammini, cammini_minimi, peso_cammini_minimi
 
 
-
->>>>>>> Stashed changes
     
 
 
@@ -265,6 +236,37 @@ class input_file:
         # mostra il grafo
         plt.axis('off') # rimuove gli assi
         plt.show()
+    
+
+    def crea_immagine_rgb(matrice, partenze, destinazioni, cammini_minimi):
+        altezza, larghezza = matrice.shape
+        immagine_rgb = np.zeros((altezza, larghezza, 3), dtype=np.uint8)
+        
+        for i in range(altezza):
+            for j in range(larghezza):
+                valore = matrice[i, j]
+                if np.isnan(valore):
+                    immagine_rgb[i, j] = (0,0,0)
+                else:
+                    immagine_rgb[i, j] = (255,255,255)
+        for i in range(len(cammini_minimi)):
+            immagine_rgb[cammini_minimi[i][0]][cammini_minimi[i][1]]=(138, 43, 226)
+        immagine_rgb[partenze[0]][partenze[1]]=(0,255,0)
+        immagine_rgb[destinazioni[0][0]][destinazioni[0][1]]=(255,0,0)
+        return immagine_rgb
+
+    def salva_immagine_jpg(immagine_rgb, percorso_immagine):
+        dimensioni= immagine_rgb.shape
+        altezza=dimensioni[0]
+        larghezza =dimensioni[1]
+        immagine = Image.fromarray(immagine_rgb)
+        area_visualizzazione=(0,0,larghezza,altezza)
+        immagine_cropped = immagine.crop(area_visualizzazione)
+        immagine_cropped.save(percorso_immagine, "JPEG")
+
+
+
+
         
         
         
