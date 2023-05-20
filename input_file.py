@@ -43,17 +43,28 @@ class input_file:
         """
     
         try:
-            nome,estensioneFile = os.path.splitext(self.filepath)
-            if estensioneFile == '.json':
-                with open(self.filepath) as file:
-                    dictionary = json.load(file)
-                    (labirinto, partenze, destinazioni)=input_file.crea_labirinto_json(self,dictionary)
-                    return (labirinto, partenze, destinazioni)
-            elif estensioneFile == '.tiff':
-                (labirinto, partenze, destinazioni)=input_file.leggi_file_tiff(self)
-                return (labirinto, partenze, destinazioni)                   
+            percorso,estensioneFile = os.path.splitext(self.filepath)
+            percorsolist=percorso.split('/')
+            nome=percorsolist[2]
+            nomefile=nome+estensioneFile
+            lista_file = os.listdir('./indata/')
+            if nomefile in lista_file:
+                if estensioneFile == '.json':
+                    with open(self.filepath) as file:
+                        dictionary = json.load(file)
+                        (labirinto, partenze, destinazioni)=input_file.crea_labirinto_json(self,dictionary)
+                        return (labirinto, partenze, destinazioni)
+                elif estensioneFile == '.tiff':
+                    (labirinto, partenze, destinazioni)=input_file.leggi_file_tiff(self)
+                    return (labirinto, partenze, destinazioni)                   
 
-                    #print("funzione ancora da implementare")
+                        #print("funzione ancora da implementare")
+            else:
+                lista_file = os.listdir('./indata/')
+                print(lista_file)
+                self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
+                return input_file.leggi_file(self)
+
         except TypeError:
             lista_file = os.listdir('./indata/')
             print(lista_file)
