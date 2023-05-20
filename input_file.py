@@ -196,6 +196,24 @@ class input_file:
                           pass
         for cammino in cammini:
             peso_cammini.append(len(cammino))
+            
+        #creo un dataFrame con i risultati di tutti i cammini
+        serie_cammini = pd.Series(cammini)
+        serie_pesi = pd.Series(peso_cammini)
+        dataframe = pd.DataFrame({'Cammini': serie_cammini, 'Pesi': serie_pesi})
+        return  dataframe
+
+
+    
+
+    def cammino_minimo(grafo, partenze, destinazioni):
+        
+        # Trasforma ogni sottolista in una tupla
+        partenze=[tuple(sublist) for sublist in partenze]
+        partenze=tuple(partenze)
+        destinazioni=[tuple(sublist) for sublist in destinazioni]
+        destinazioni=tuple(destinazioni)
+        
         # converti in insiemi di nodi
         partenze_set = set(partenze)
         destinazioni_set = set(destinazioni)
@@ -218,16 +236,11 @@ class input_file:
                         
                         except nx.NodeNotFound:
                           pass
-        #creo un dataFrame con i risultati di tutti i cammini
-        serie_cammini = pd.Series(cammini)
-        serie_pesi = pd.Series(peso_cammini)
-        dataframe = pd.DataFrame({'Cammini': serie_cammini, 'Pesi': serie_pesi})
-        return cammini, cammini_minimi, peso_cammini_minimi, dataframe
-
-
-    
-
-
+        return cammini_minimi, peso_cammini_minimi
+        
+        
+        
+        
     def plot_grafo(G):
         pos = nx.spring_layout(G) # posizionamento dei nodi
         nx.draw_networkx_nodes(G, pos, node_color='lightblue') # disegna i nodi

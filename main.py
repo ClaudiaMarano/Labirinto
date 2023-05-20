@@ -20,8 +20,8 @@ inputfile = input_file(filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
 grafo , matrice = input_file.crea_grafo(labirinto)
 
-
-cammini, cammini_minimi, peso_cammini_minimo, dataFrame = input_file.trova_tutti_i_cammini(grafo, partenze, destinazioni)
+dataFrame = input_file.trova_tutti_i_cammini(grafo, partenze, destinazioni)
+cammini_minimi, peso_cammini_minimi = input_file.cammino_minimo(grafo, partenze, destinazioni)
 
 #costo, path = input_file.dijikstra(grafo, partenze, destinazioni)
 #print(path)
@@ -34,7 +34,7 @@ for i in range(len(partenze)):
 print(labirinto)
 print(partenze)  
 print(destinazioni)
-print(peso_cammini_minimo)
+print(peso_cammini_minimi)
 #print(cammini)
 #print(cammini_minimi)
 
