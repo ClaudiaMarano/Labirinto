@@ -233,7 +233,19 @@ class input_file:
         return cammini_minimi, peso_cammini_minimi
         
         
+    def lunghezza_percorso_in_pixel():
+        """
+        Se ho trovato un percorso che collega partenza e destinazione, 
+        questa funzione calcola la lunghezza in pixel fra i due punti specificati. 
         
+        Per calcolare la lunghezza in pixel, calcoliamo la distanza euclidea fra le celle
+
+        Returns
+        -------
+        None.
+
+        """
+        return
         
     def plot_grafo(G):
         pos = nx.spring_layout(G) # posizionamento dei nodi
