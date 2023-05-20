@@ -189,13 +189,9 @@ class input_file:
             for destinazione in destinazioni:
                 if grafo.has_node(partenza) and grafo.has_node(destinazione):
                     if nx.has_path(grafo,partenza,destinazione):
-                        try:
-                            cammini.extend(list(nx.all_simple_paths(grafo, source=partenza, target=destinazione)))
-                            
-                        except nx.NodeNotFound:
-                          pass
-        for cammino in cammini:
-            peso_cammini.append(len(cammino))
+                        for cammino in nx.all_simple_paths(grafo, source=partenza, target=destinazione):
+                            cammini.append(cammino)
+                            peso_cammini.append(len(cammino))
             
         #creo un dataFrame con i risultati di tutti i cammini
         serie_cammini = pd.Series(cammini)
@@ -225,17 +221,15 @@ class input_file:
                 # verifico che i nodi di partenza e destinazione siano nel grafo
                 if grafo.has_node(nodo_p) and grafo.has_node(nodo_d):
                     if nx.has_path(grafo,nodo_p,nodo_d):
-                        try:
-                            #Returns the shortest weighted path from source to target in G.
-                            cammino_minimo = nx.dijkstra_path(grafo, nodo_p, nodo_d)
-                            cammini_minimi.append(cammino_minimo)
+                        #Returns the shortest weighted path from source to target in G.
+                        cammino_minimo = nx.dijkstra_path(grafo, nodo_p, nodo_d)
+                        cammini_minimi.append(cammino_minimo)
                             
-                            #Returns the shortest weighted path length in G from source to target
-                            peso_cammino=nx.dijkstra_path_length(grafo, nodo_p, nodo_d)
-                            peso_cammini_minimi.append(peso_cammino)
+                        #Returns the shortest weighted path length in G from source to target
+                        peso_cammino=nx.dijkstra_path_length(grafo, nodo_p, nodo_d)
+                        peso_cammini_minimi.append(peso_cammino)
                         
-                        except nx.NodeNotFound:
-                          pass
+                        
         return cammini_minimi, peso_cammini_minimi
         
         
