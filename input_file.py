@@ -10,6 +10,7 @@ import networkx as nx
 import heapq
 import matplotlib as plt
 import pandas as pd
+import math
 
 class input_file:
    
@@ -25,7 +26,10 @@ class input_file:
     
 
     def __init__(self, filepath):
+        
         self.filepath = filepath
+        
+        
         
     
     def leggi_file(self):
@@ -71,6 +75,8 @@ class input_file:
             self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
             return input_file.leggi_file(self)
     
+    
+    
     def leggi_file_tiff(self):
         """
         input:self.path della classe
@@ -88,6 +94,8 @@ class input_file:
             img_array = np.array(img)
             (labirinto, partenze, destinazioni)=input_file.crea_labirinto_tiff(self,img_array)
             return (labirinto, partenze, destinazioni)
+        
+        
     
     def crea_labirinto_json(self,dict):
         """
@@ -122,6 +130,8 @@ class input_file:
             labirinto[posizione_orizzontale,posizione_verticale]=float(dict['costi'][i][2])
         return (labirinto, partenze, destinazioni)
     
+    
+    
     def crea_labirinto_tiff(self,img_array):
         """
         inpunt: matrice a tre dimensioni aveente per ogni pixel la sua corrispondente triade RGB
@@ -152,8 +162,8 @@ class input_file:
                     coordinate.append(j)
                     partenze.append(coordinate)
         
-        
         return (labirinto, partenze, destinazioni)
+    
     
 
     def crea_nodi(labirinto):
@@ -162,6 +172,7 @@ class input_file:
             for j, val in enumerate(row):
                 if not np.isnan(val):
                     G.add_node((i, j), weight=1)
+    
     
     
     def crea_grafo(labirinto):
@@ -184,7 +195,37 @@ class input_file:
         adj_matrix = nx.to_numpy_array(G)
         return G, adj_matrix
     
+                        
+
     
+# =============================================================================
+#     def posizioni_adiacenti(labirinto,curr_pos):
+#         
+#         """
+#         Questa funzione verifica quali tra le 4 posizioni adiacenti alla posizione corrente
+#         siano uno spazio percorribile e non un muro.
+#         Parameters
+#         ----------
+#         pos : tuple
+#             Rappresenta la casella di cui valutare le adiacenti.
+# 
+#         Returns
+#         -------
+#         valid_positions : list
+#             Restituisce tutte le caselle in cui è possibile spostarsi.
+#         """
+#         
+#         x, y = curr_pos
+#         adjacent_positions = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+#         valid_positions = []
+#         for i,j in adjacent_positions:
+#             if i >= 0 and j >= 0 and i<len(labirinto) and j<len(labirinto[0]) and not math.isnan(labirinto[i][j]):
+#                 valid_positions.append(((i,j), labirinto[i][j]))
+#         return valid_positions
+# =============================================================================
+    
+    
+
     def trova_tutti_i_cammini(grafo, partenze, destinazioni):
         
         # Trasforma ogni sottolista in una tupla
@@ -242,12 +283,16 @@ class input_file:
                         
                         
         return cammini_minimi, peso_cammini_minimi
+    
+    
+    
         
-        
-    def lunghezza_percorso_in_pixel():
+    def lunghezza_percorso_in_pixel(dataFrame):
         """
         Se ho trovato un percorso che collega partenza e destinazione, 
         questa funzione calcola la lunghezza in pixel fra i due punti specificati. 
+        
+        Riceve in ingresso il path dei cammini trovati
         
         Per calcolare la lunghezza in pixel, calcoliamo la distanza euclidea fra le celle
 
@@ -256,7 +301,20 @@ class input_file:
         None.
 
         """
-        return
+        lunghezze=[]
+        lunghezza=0
+        #considero paths come una lista di tuple che contengono le posizioni occupate dai nodi in sequenza
+        for path in dataFrame['Cammini'].to_list():
+            for i in range(len(path) - 1):
+                x1, y1 = path[i]
+                x2, y2 = path[i + 1]
+                distanza = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+                lunghezza += distanza
+            lunghezze.append(lunghezza)
+        return lunghezze
+    
+    
+    
         
     def plot_grafo(G):
         pos = nx.spring_layout(G) # posizionamento dei nodi
@@ -267,6 +325,8 @@ class input_file:
         plt.axis('off') # rimuove gli assi
         plt.show()
     
+
+
 
     def crea_immagine_rgb(matrice, partenze, destinazioni, cammini_minimi):
         altezza, larghezza = matrice.shape
@@ -284,6 +344,9 @@ class input_file:
         immagine_rgb[partenze[0]][partenze[1]]=(0,255,0)
         immagine_rgb[destinazioni[0][0]][destinazioni[0][1]]=(255,0,0)
         return immagine_rgb
+
+
+
 
     def salva_immagine_jpg(immagine_rgb, percorso_immagine):
         dimensioni= immagine_rgb.shape
