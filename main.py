@@ -37,9 +37,18 @@ cammini_minimi, peso_cammini_minimi = input_file.cammino_minimo(grafo, partenze,
 #path_tot, wieght_tot=input_file(grafo,partenze,destinazioni)
 
 #print(path)
+cartella = './output'  # Specifica il percorso alla cartella desiderata
+# Ottenere l'elenco dei file nella cartella
+elenco_file = os.listdir(cartella)
+# Rimuovere ogni file nella cartella
+print(len(partenze))
+print(len(cammini_minimi))
+for file in elenco_file:
+    percorso_file = os.path.join(cartella, file)  # Crea il percorso completo al file
+    os.remove(percorso_file)
 for i in range(len(partenze)):
+    print(i)
     immagine_rgb = input_file.crea_immagine_rgb(labirinto, partenze[i],destinazioni, cammini_minimi[i])
-    print(immagine_rgb.shape)
     percorso_output='./output/'+f'soluzione_ottima{i+1}.jpeg'
     input_file.salva_immagine_jpg(immagine_rgb, percorso_output)
 
