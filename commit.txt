@@ -1,0 +1,174 @@
+file main.py:
+
+from risolutore import richiamatore_di metodi
+if __name__=='__main__':
+    risolutore=risolutore()
+    risolutore.richiamatore_di_metodi()
+
+    
+
+file risolutore.py:
+from input_file import
+class risolutore:
+""" Se non mi ricordo male, se non si mette in costruttore ad una classe si può anche non richiamare con il metodo cui facciamo di solito.
+    perciò io direi di fare tutte le classi senza costruttore, tranne labirinto a cui diamo gli attributi self.nome_labirinto, self.path_labirinto,
+    self.larghezza, self.altezza
+"""
+    def richiamatore_di_metodi(self):
+            
+        lista_file = os.listdir('./indata/')
+        print(lista_file)
+        #fornire il file in input come: indata/nomefile.json
+        filepath = './indata/'+str(input('Inserisci il nome del file da leggere con formato tiff o json tra uno di quelli elencati:  '))
+        percorso,estensioneFile = os.path.splitext(self.filepath)
+        percorsolist=percorso.split('/')
+        nome=percorsolist[2]
+        nomefile=nome+estensioneFile
+        inp=input_file()
+        (labirinto, partenze, destinazioni)=inp.leggi_file(filepath)
+
+
+
+file input_file.py:
+From labirinto import labirinto
+class input_file:
+    def leggi_file(self,filepath):
+    """
+        input: self.filepath della classe
+
+        Riconosce se il file nella path è un in formato json o tiff, altrimenti non lo legge.
+        A seconda del tipo di file richiama il metedo adeguato per la creazione della matrice labirinto, della lista delle partenze e
+        della lista delle destinazioni.
+
+        output: matrice del labirinto, lista partenze e lista destinazioni.
+        -------
+        None.
+
+
+    """
+        try:
+                percorso,estensioneFile = os.path.splitext(self.filepath)
+                percorsolist=percorso.split('/')
+                nome=percorsolist[2]
+                nomefile=nome+estensioneFile
+                lista_file = os.listdir('./indata/')
+                if nomefile in lista_file:
+                    if estensioneFile == '.json':
+                        with open(self.filepath) as file:
+                            dictionary=input_file.leggi_file_json()
+                            maze=labirinto()
+                            (labirinto, partenze, destinazioni)=maze.crea_labirinto_json(self,dictionary)
+                            return (labirinto, partenze, destinazioni)
+                    elif estensioneFile == '.tiff':
+                        img_array =input_file.leggi_file_tiff(self)
+                        maze=labirinto()
+                        (labirinto, partenze, destinazioni)=maze.crea_labirinto_tiff(self,img_array)
+                        return (labirinto, partenze, destinazioni)                   
+
+                            #print("funzione ancora da implementare")
+                else:
+                    lista_file = os.listdir('./indata/')
+                    print(lista_file)
+                    self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
+                    return input_file.leggi_file(self)
+
+            except TypeError:
+                lista_file = os.listdir('./indata/')
+                print(lista_file)
+                self.filepath='./indata/'+str(input('il file cercato non è presente nella cartella. Prova con un altro nome: '))
+                return input_file.leggi_file(self)
+
+    def leggi_file_json(self,filepath):
+        with open(filepath) as file:
+            dictionary = json.load(file)
+        return dictionary    
+    
+    def leggi_file_tiff(self, filepath):
+        """
+        input:self.path della classe
+
+        legge l'immagine e la converte in una matrice a tre dimensioni dove le prime due grandezze sono le lunghezze
+        del labirinto e la terza è tre corrispondente ai tre colori RGB.
+        la mtrice viene richiamta da un altro metodo che restuisce una mtrice labirinto, una lista di posizioni di partenza e una lista di destinazioni.
+
+        output: matrice labirinto, partenze e destinazioni.
+        """
+
+        # Apri il file TIFF
+        with Image.open(filepath) as img:
+            # Converti l'immagine in una matrice NumPy
+            img_array = np.array(img)
+            
+            return img_array
+        
+        
+file labirinto.py:
+class labirinto:  
+    def crea_labirinto_json(self,dict):
+        """
+        inpunt: dizionario con caratteristiche del labirinto
+
+        metodo che crea il labirito sostituendo nelle coordinate specificate nel dizionario i costi corrispondenti 
+        e pone al posto delle pareti il valore nan.
+        inoltre salva in una lista di liste le posizioni di partenza e di destinazione.
+
+        output: matrice labirinto, lista delle posizioni di partenza e lista delle posizioni di destinazione
+        """
+        #creo una matrice numpy piena di zeri, con le grandezze del labirinto
+        labirinto= np.full((dict['altezza'], dict['larghezza']), 1.)
+        partenze=dict['iniziali']
+        destinazioni=dict['finale']
+        #creo le pareti sostiuendo gli zeri con nan
+        for i in range(len(dict['pareti'])):
+            if dict['pareti'][i]['orientamento']=='H':
+                indice1=int(dict['pareti'][i]['posizione'][0])
+                indice2=int(dict['pareti'][i]['posizione'][1])
+                indice3=int(dict['pareti'][i]['posizione'][1])+int(dict['pareti'][i]['lunghezza'])
+                labirinto[indice1,indice2:indice3]=np.nan
+            else:
+                indice1=int(dict['pareti'][i]['posizione'][0])
+                indice2=int(dict['pareti'][i]['posizione'][0])+int(dict['pareti'][i]['lunghezza'])
+                indice3=int(dict['pareti'][i]['posizione'][1])
+                labirinto[indice1:indice2,indice3]=np.nan
+        #sostuisco con il costo le posizioni specificate
+        for i in range(len(dict['costi'])):
+            posizione_orizzontale=dict['costi'][i][0]
+            posizione_verticale=dict['costi'][i][1]
+            labirinto[posizione_orizzontale,posizione_verticale]=float(dict['costi'][i][2])
+        return (labirinto, partenze, destinazioni)
+    
+    
+    
+    def crea_labirinto_tiff(self,img_array):
+        """
+        inpunt: matrice a tre dimensioni aveente per ogni pixel la sua corrispondente triade RGB
+
+        metodo che crea il labirito sostituendo nelle coordinate specificate del dizionario i costi corrispondenti 
+        e pone al posto delle pareti il valore nan.
+        inoltre salva in una lista di liste le posizioni di partenza e di destinazione.
+
+        output: matrice labirinto, lista delle posizioni di partenza e lista delle posizioni di destinazione
+        """
+        leggenda_colori={'[255 255 255]':1.,'[0 0 0]':np.nan,'[0 255 0]':0.,'[255 0 0]':0.,'[16 16 16]':1.,'[32 32 32]':2.,'[48 48 48]':3.,'[64 64 64]':4.,'[80 80 80]':5.,'[96 96 96]':6.,'[112 112 112]':7.,'[128 128 128]':8.,'[144 144 144]':9.,'[160 160 160]':10.,'[176 176 176]':11.,'[192 192 192]':12.,'[208 208 208]':13.,'[224 224 224]':14.,'[240 240 240]':15.}
+        forma_lab=img_array.shape
+        partenze=[]
+        destinazioni=[]
+        labirinto=np.full((forma_lab[0],forma_lab[1]),np.empty)
+        for i in range(forma_lab[0]):
+            for j in range(forma_lab[1]):
+                indice=f'[{img_array[i][j][0]} {img_array[i][j][1]} {img_array[i][j][2]}]'
+                labirinto[i,j]=leggenda_colori[indice]
+                if indice=='[255 0 0]':
+                    coordinate=[]
+                    coordinate.append(i)
+                    coordinate.append(j)
+                    destinazioni.append(coordinate)
+                elif indice=='[0 255 0]':
+                    coordinate=[]
+                    coordinate.append(i)
+                    coordinate.append(j)
+                    partenze.append(coordinate)
+        
+        return (labirinto, partenze, destinazioni)
+ 
+    
