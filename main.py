@@ -22,6 +22,8 @@ inputfile = input_file(filepath)
 (labirinto, partenze, destinazioni)= inputfile.leggi_file()
 grafo , matrice = input_file.crea_grafo(labirinto)
 
+
+
 # for nodo in grafo.nodes:
 #     posizioni_adiacenti_valide=input_file.posizioni_adiacenti(labirinto, nodo)
     
@@ -29,8 +31,8 @@ grafo , matrice = input_file.crea_grafo(labirinto)
 
 
 dataFrame = input_file.trova_tutti_i_cammini(grafo, partenze, destinazioni)
-
-lunghezza=input_file.lunghezza_percorso_in_pixel(dataFrame)
+#grafo2, matrice2=input_file(labirinto)
+#lunghezza=input_file.lunghezza_percorso_in_pixel(dataFrame)
 cammini_minimi, peso_cammini_minimi = input_file.cammino_minimo(grafo, partenze, destinazioni)
 #posizioni = input_file.get_adjacent_positions(grafo, partenze)
 

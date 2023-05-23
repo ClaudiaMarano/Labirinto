@@ -12,6 +12,7 @@ import matplotlib as plt
 import pandas as pd
 import math
 
+
 class input_file:
    
     """
@@ -174,30 +175,32 @@ class input_file:
                     G.add_node((i, j), weight=1)
     
     
+
     
     def crea_grafo(labirinto):
         #creo un'istanza del grafo
         G = nx.Graph()
+        righe,colonne=labirinto.shape
         for i, row in (enumerate(labirinto)): #i tiene traccia della riga, row contiene la riga
             for j, val in enumerate(row): #j tiene conto della colonna, val del valore della cella
                 if not np.isnan(val): #se l'elemento della cella non è nan 
                 #controlla se la cella corrente ha una cella adiacente sopra di essa, 
                 #e se quella cella adiacente non è un valore mancante.
                     if i > 0 and not np.isnan(labirinto[i-1, j]):
-                        G.add_edge((i, j), (i-1, j), weight=1) #aggiungo arco di peso unitario
+                        G.add_edge((i, j), (i-1, j), weight= labirinto[i-1,j]) #aggiungo arco
                     if j > 0 and not np.isnan(labirinto[i, j-1]):
-                        G.add_edge((i, j), (i,j-1), weight=1)
+                        G.add_edge((i, j), (i,j-1), weight = labirinto[1,j-1])
                     # Riguarda le ultime caselle
-                    if i < labirinto.shape[0]-1 and not np.isnan(labirinto[i+1, j]):
-                        G.add_edge((i, j), (i+1, j), weight=1)
-                    if j < labirinto.shape[0]-1 and not np.isnan(labirinto[i, j+1]):
-                        G.add_edge((i, j), (i, j+1), weight=1)
+                    if i < righe-1 and not np.isnan(labirinto[i+1, j]):
+                        G.add_edge((i, j), (i+1, j), weight=val)
+                    if j < colonne-1 and not np.isnan(labirinto[i, j+1]):
+                        G.add_edge((i, j), (i, j+1), weight= val)
         adj_matrix = nx.to_numpy_array(G)
         return G, adj_matrix
     
                         
 
-    
+ 
 # =============================================================================
 #     def posizioni_adiacenti(labirinto,curr_pos):
 #         
@@ -237,14 +240,24 @@ class input_file:
         #Calcolo tutti i possibili cammini fra partenza/e e destinazione/i
         cammini = []
         peso_cammini=[]
+        lunghezza_cammino=0
         for partenza in partenze:
             for destinazione in destinazioni:
                 if grafo.has_node(partenza) and grafo.has_node(destinazione):
                     if nx.has_path(grafo,partenza,destinazione):
                         for cammino in nx.all_simple_paths(grafo, source=partenza, target=destinazione):
+                            pd.Series(cammino)
+                            for u, v, attrs in grafo.edges(data=True):
+                                peso_arco= attrs['weight']
+                            
                             cammini.append(cammino)
-                            peso_cammini.append(len(cammino))
-            
+                            lunghezza_cammino=len(cammino)
+                            # Itera su tutti gli archi del grafo
+                            for u, v, attrs in grafo.edges(data=True):
+                                peso_arco= attrs['weight']  # Accedi al peso dell'arco
+                                peso_totale=peso_arco+lunghezza_cammino
+                                peso_cammini.append(peso_totale)
+                            
         #creo un dataFrame con i risultati di tutti i cammini
         serie_cammini = pd.Series(cammini)
         serie_pesi = pd.Series(peso_cammini)
@@ -252,7 +265,14 @@ class input_file:
         return  dataframe
 
 
-    
+    def get_pesi(grafo, cammini):
+        for cammino in cammini:
+            for nodo in cammino:
+                source=nodo[nodo]
+                target=nodo[nodo+1]
+                edge_data = grafo.get_edge_data(source, target)
+                weight = edge_data['weight']
+                print(f"Nodo: {target}, Peso: {weight}")
 
     def cammino_minimo(grafo, partenze, destinazioni):
         
@@ -328,13 +348,13 @@ class input_file:
 
 
 
-    def crea_immagine_rgb(matrice, partenze, destinazioni, cammini_minimi):
-        altezza, larghezza = matrice.shape
+    def crea_immagine_rgb(labirinto, partenze, destinazioni, cammini_minimi):
+        altezza, larghezza = labirinto.shape
         immagine_rgb = np.zeros((altezza, larghezza, 3), dtype=np.uint8)
         
         for i in range(altezza):
             for j in range(larghezza):
-                valore = matrice[i, j]
+                valore = labirinto[i, j]
                 if np.isnan(valore):
                     immagine_rgb[i, j] = (0,0,0)
                 else:
